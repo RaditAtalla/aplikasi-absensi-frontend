@@ -1,5 +1,4 @@
-import { StyleSheet } from "react-native";
-import { View, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image } from "react-native";
 
 export default function ProfileCard() {
   return (
