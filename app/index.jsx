@@ -25,7 +25,7 @@ export default function Login() {
           placeholder={"Password"}
           style={{ marginBottom: 40 }}
         />
-        <Link href={"/"} asChild>
+        <Link href={"/main"} asChild>
           <Pressable style={styles.button}>
             <Text style={styles.buttonText}>LOG IN</Text>
           </Pressable>
