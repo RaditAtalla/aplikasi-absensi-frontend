@@ -1,5 +1,13 @@
-import { Image, StatusBar, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import ProfileCard from "../../components/ProfileCard";
+import AbsenCard from "../../components/AbsenCard";
 
 export default function Home() {
   return (
@@ -8,6 +16,7 @@ export default function Home() {
       <View style={styles.container}>
         <Text style={styles.date}>27 Januari 2025</Text>
         <ProfileCard />
+        <AbsenCard />
       </View>
     </>
   );
