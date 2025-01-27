@@ -1,5 +1,4 @@
-import { StyleSheet } from "react-native";
-import { View, Text, Pressable } from "react-native";
+import { StyleSheet, View, Text, Pressable } from "react-native";
 
 export default function AbsenCard() {
   return (

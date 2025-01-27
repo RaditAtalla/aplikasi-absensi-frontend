@@ -1,23 +1,18 @@
-import {
-  Image,
-  Pressable,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { StatusBar, StyleSheet, Text, ScrollView } from "react-native";
 import ProfileCard from "../../components/ProfileCard";
 import AbsenCard from "../../components/AbsenCard";
+import HistoryCard from "../../components/HistoryCard";
 
 export default function Home() {
   return (
     <>
       <StatusBar backgroundColor={"#B22A2A"} barStyle={"light-content"} />
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Text style={styles.date}>27 Januari 2025</Text>
         <ProfileCard />
         <AbsenCard />
-      </View>
+        <HistoryCard />
+      </ScrollView>
     </>
   );
 }

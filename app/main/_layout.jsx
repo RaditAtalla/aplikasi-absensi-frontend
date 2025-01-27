@@ -134,7 +134,7 @@ const drawerStyles = StyleSheet.create({
 const headerStyles = StyleSheet.create({
   header: {
     backgroundColor: "#B22A2A",
-    paddingVertical: 30,
+    paddingVertical: 20,
     flexDirection: "row",
     justifyContent: "center",
   },
