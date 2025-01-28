@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { StatusBar, StyleSheet, Text, ScrollView } from "react-native";
 import ProfileCard from "../../components/ProfileCard";
 import AbsenCard from "../../components/AbsenCard";
 import HistoryCard from "../../components/HistoryCard";
+import getTodayFullDate from "../../lib/utils/getTodayFullDate";
 
 export default function Home() {
   return (
     <>
       <StatusBar backgroundColor={"#B22A2A"} barStyle={"light-content"} />
       <ScrollView style={styles.container}>
-        <Text style={styles.date}>27 Januari 2025</Text>
+        <Text style={styles.date}>{getTodayFullDate()}</Text>
         <ProfileCard />
         <AbsenCard />
         <HistoryCard />
