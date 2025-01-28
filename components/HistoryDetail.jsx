@@ -1,13 +1,13 @@
 import { Modal, View, Text, Pressable, StyleSheet } from "react-native";
 
-export default function HistoryDetai({ isModalOpen, closeAction }) {
+export default function HistoryDetai({ isModalOpen, closeAction, data }) {
   return (
     <Modal visible={isModalOpen} animationType="slide" transparent>
       <Pressable onPress={closeAction} style={styles.bottomSheet}>
         <View style={styles.historyDetail}>
           <View style={styles.historyDetailHeader}>
-            <Text style={styles.historyDetailDay}>SELASA</Text>
-            <Text style={styles.historyDetailDate}>25 Mei 2024</Text>
+            <Text style={styles.historyDetailDay}>{data.day}</Text>
+            <Text style={styles.historyDetailDate}>{data.date}</Text>
           </View>
           <View style={styles.line} />
           <View style={styles.historyDetailInfo}>
@@ -23,7 +23,7 @@ export default function HistoryDetai({ isModalOpen, closeAction }) {
               <Text style={styles.historyDetailHourLabel}>PUKUL</Text>
               <View style={styles.historyDetailHour}>
                 <Text style={{ fontFamily: "AlegreyaLight", fontSize: 16 }}>
-                  08:00 WIB
+                  {data.arriveTime}
                 </Text>
               </View>
             </View>
@@ -39,7 +39,7 @@ export default function HistoryDetai({ isModalOpen, closeAction }) {
               <Text style={styles.historyDetailHourLabel}>PUKUL</Text>
               <View style={styles.historyDetailHour}>
                 <Text style={{ fontFamily: "AlegreyaLight", fontSize: 16 }}>
-                  12:10 WIB
+                  {data.leaveTime}
                 </Text>
               </View>
             </View>
@@ -50,7 +50,19 @@ export default function HistoryDetai({ isModalOpen, closeAction }) {
                 >
                   STATUS KEHADIRAN
                 </Text>
-                <Text style={styles.historyDetailStatus}>TIDAK TERLAMBAT</Text>
+                <Text
+                  style={[
+                    styles.historyDetailStatus,
+                    {
+                      backgroundColor:
+                        data.status == "TIDAK TERLAMBAT"
+                          ? "#3D8C3B"
+                          : "#A09C2D",
+                    },
+                  ]}
+                >
+                  {data.status}
+                </Text>
               </View>
               <Pressable onPress={closeAction}>
                 <Text style={styles.historyDetailOk}>OK</Text>

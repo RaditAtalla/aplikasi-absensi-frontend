@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, Pressable } from "react-native";
 import ModalCustom from "./ModalCustom";
 import MenuButton from "./MenuButton";
 
-export default function AbsenCard() {
+export default function AbsenCard({ latitude, longitude }) {
   const [isAbsenModalOpen, setIsAbsenModalOpen] = useState(false);
 
   function handleAbsen() {
@@ -18,9 +18,9 @@ export default function AbsenCard() {
         </View>
         <View style={styles.absenInfo}>
           <Text style={styles.absenInfoText}>Your location:</Text>
-          <Text style={styles.absenInfoText}>Latitude: - 0,999102399999</Text>
+          <Text style={styles.absenInfoText}>Latitude: {latitude}</Text>
           <Text style={[styles.absenInfoText, { marginBottom: 5 }]}>
-            Longtitude: - 0,999102399999
+            Longtitude: {longitude}
           </Text>
           <Text style={[styles.absenInfoText, { fontWeight: "700" }]}>
             TUNGGU SAMPAI TOMBOL ABSEN MUNCUL

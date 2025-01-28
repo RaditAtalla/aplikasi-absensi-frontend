@@ -1,10 +1,19 @@
 import { StyleSheet, View, Text, Image } from "react-native";
 
-export default function ProfileCard() {
+export default function ProfileCard({
+  profilePicture,
+  teacherType,
+  status,
+  name,
+  nisn,
+}) {
   return (
     <View style={styles.profileBox}>
       <View style={styles.profileHeader}>
-        <Text style={styles.profileType}>GURU {"\n"}PRODUKTIF</Text>
+        <Text style={styles.profileType}>
+          GURU {"\n"}
+          {teacherType}
+        </Text>
         <View>
           <Text
             style={[
@@ -14,14 +23,11 @@ export default function ProfileCard() {
           >
             STATUS
           </Text>
-          <Text style={styles.profileStatus}>AKTIF MENGAJAR</Text>
+          <Text style={styles.profileStatus}>{status}</Text>
         </View>
       </View>
       <View style={styles.profileInfo}>
-        <Image
-          source={require("../assets/images/profile.png")}
-          style={styles.profilePic}
-        />
+        <Image source={profilePicture} style={styles.profilePic} />
         <View style={{ justifyContent: "center", gap: 8 }}>
           <View>
             <View style={{ flexDirection: "row" }}>
@@ -36,7 +42,7 @@ export default function ProfileCard() {
                   flexWrap: "wrap",
                 }}
               >
-                Rizky Prayuda F. S.Kom
+                {name}
               </Text>
             </View>
             <Text
@@ -47,7 +53,7 @@ export default function ProfileCard() {
                 fontSize: 15,
               }}
             >
-              NISN: 545211210
+              NISN: {nisn}
             </Text>
           </View>
           <Text style={{ color: "white", fontFamily: "Inter", fontSize: 10 }}>

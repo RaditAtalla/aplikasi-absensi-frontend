@@ -4,9 +4,72 @@ import ModalCustom from "./ModalCustom";
 import MenuButton from "./MenuButton";
 import HistoryDetail from "./HistoryDetail";
 
+const history = [
+  {
+    day: "SELASA",
+    date: "11 NOVEMBER 2023",
+    period: "SEMESTER GANJIL TA 2023/2024",
+    periodSlug: "2023/2024-1",
+    arriveTime: "07:02 WIB",
+    leaveTime: "15:13 WIB",
+    status: "TIDAK TERLAMBAT",
+  },
+  {
+    day: "SENIN",
+    date: "10 NOVEMBER 2023",
+    period: "SEMESTER GANJIL TA 2023/2024",
+    periodSlug: "2023/2024-1",
+    arriveTime: "07:00 WIB",
+    leaveTime: "12:10 WIB",
+    status: "TIDAK TERLAMBAT",
+  },
+  {
+    day: "SELASA",
+    date: "25 MEI 2024",
+    period: "SEMESTER GENAP TA 2023/2024",
+    periodSlug: "2023/2024-2",
+    arriveTime: "08:00 WIB",
+    leaveTime: "12:10 WIB",
+    status: "TERLAMBAT",
+  },
+  {
+    day: "SENIN",
+    date: "24 MEI 2024",
+    period: "SEMESTER GENAP TA 2023/2024",
+    periodSlug: "2023/2024-2",
+    arriveTime: "07:00 WIB",
+    leaveTime: "15:30 WIB",
+    status: "TIDAK TERLAMBAT",
+  },
+];
+
 export default function HistoryCard() {
   const [isHistoryDetailOpen, setIsHistoryDetailOpen] = useState(false);
   const [isPeriodOpen, setIsPeriodOpen] = useState(false);
+  const [period, setPeriod] = useState("2023/2024-1");
+  const [historyDetail, setHistoryDetail] = useState({});
+
+  function handlePeriodChange(period) {
+    setPeriod(period);
+    setIsPeriodOpen(!isPeriodOpen);
+  }
+
+  function handleViewHistoryDetail(date) {
+    setIsHistoryDetailOpen(true);
+    history.forEach((h) => {
+      if (h.date == date) {
+        setHistoryDetail({
+          day: h.day,
+          date: h.date,
+          period: h.period,
+          periodSlug: h.periodSlug,
+          arriveTime: h.arriveTime,
+          leaveTime: h.leaveTime,
+          status: h.status,
+        });
+      }
+    });
+  }
 
   return (
     <>
@@ -14,27 +77,27 @@ export default function HistoryCard() {
         <View style={styles.historyHeader}>
           <Text style={styles.historyTitle}>PRESENSI {"\n"}KEHADIRAN</Text>
           <Pressable onPress={() => setIsPeriodOpen(true)}>
-            <Text style={styles.historyPeriod}>2023/2024-2</Text>
+            <Text style={styles.historyPeriod}>{period}</Text>
           </Pressable>
         </View>
-        <View style={[styles.historyListBox, { marginBottom: 10 }]}>
-          <View>
-            <Text style={styles.historyListDate}>Selasa</Text>
-            <Text style={styles.historyListDate}>25 Mei 2024</Text>
-          </View>
-          <Pressable onPress={() => setIsHistoryDetailOpen(true)}>
-            <Text style={styles.historySeeButton}>Lihat</Text>
-          </Pressable>
-        </View>
-        <View style={styles.historyListBox}>
-          <View>
-            <Text style={styles.historyListDate}>Senin</Text>
-            <Text style={styles.historyListDate}>24 Mei 2024</Text>
-          </View>
-          <Pressable onPress={() => setIsHistoryDetailOpen(true)}>
-            <Text style={styles.historySeeButton}>Lihat</Text>
-          </Pressable>
-        </View>
+        {history.map((h) => {
+          if (h.periodSlug == period) {
+            return (
+              <View
+                key={h.date}
+                style={[styles.historyListBox, { marginBottom: 10 }]}
+              >
+                <View>
+                  <Text style={styles.historyListDate}>{h.day}</Text>
+                  <Text style={styles.historyListDate}>{h.date}</Text>
+                </View>
+                <Pressable onPress={() => handleViewHistoryDetail(h.date)}>
+                  <Text style={styles.historySeeButton}>Lihat</Text>
+                </Pressable>
+              </View>
+            );
+          }
+        })}
       </View>
       <ModalCustom
         isModalOpen={isPeriodOpen}
@@ -42,15 +105,16 @@ export default function HistoryCard() {
       >
         <MenuButton
           text={"SEMESTER GANJIL TA 2023/2024"}
-          onPress={() => setIsPeriodOpen(!isPeriodOpen)}
+          onPress={() => handlePeriodChange("2023/2024-1")}
           style={{ marginBottom: 10 }}
         />
         <MenuButton
           text={"SEMESTER GENAP TA 2023/2024"}
-          onPress={() => setIsPeriodOpen(!isPeriodOpen)}
+          onPress={() => handlePeriodChange("2023/2024-2")}
         />
       </ModalCustom>
       <HistoryDetail
+        data={historyDetail}
         isModalOpen={isHistoryDetailOpen}
         closeAction={() => setIsHistoryDetailOpen(!isHistoryDetailOpen)}
       />
