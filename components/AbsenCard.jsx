@@ -1,33 +1,53 @@
+import { useState } from "react";
 import { StyleSheet, View, Text, Pressable } from "react-native";
+import ModalCustom from "./ModalCustom";
+import MenuButton from "./MenuButton";
 
 export default function AbsenCard() {
+  const [isAbsenModalOpen, setIsAbsenModalOpen] = useState(false);
+
+  function handleAbsen() {
+    setIsAbsenModalOpen(true);
+  }
+
   return (
-    <View style={styles.absenBox}>
-      <View style={styles.absenHeader}>
-        <Text style={styles.absenText}>ABSEN</Text>
-      </View>
-      <View style={styles.absenInfo}>
-        <Text style={styles.absenInfoText}>Your location:</Text>
-        <Text style={styles.absenInfoText}>Latitude: - 0,999102399999</Text>
-        <Text style={[styles.absenInfoText, { marginBottom: 5 }]}>
-          Longtitude: - 0,999102399999
-        </Text>
-        <Text style={[styles.absenInfoText, { fontWeight: "700" }]}>
-          TUNGGU SAMPAI TOMBOL ABSEN MUNCUL
-        </Text>
-        <Text style={[styles.absenInfoText, { fontSize: 10 }]}>
-          jika lebih dari 10 detik belum muncul, klik tombol reload
-        </Text>
-        <View style={styles.absenButtonContainer}>
-          <Pressable style={styles.absenButton}>
-            <Text>HADIR</Text>
-          </Pressable>
-          <Pressable style={styles.absenButton}>
-            <Text>RELOAD</Text>
-          </Pressable>
+    <>
+      <View style={styles.absenBox}>
+        <View style={styles.absenHeader}>
+          <Text style={styles.absenText}>ABSEN</Text>
+        </View>
+        <View style={styles.absenInfo}>
+          <Text style={styles.absenInfoText}>Your location:</Text>
+          <Text style={styles.absenInfoText}>Latitude: - 0,999102399999</Text>
+          <Text style={[styles.absenInfoText, { marginBottom: 5 }]}>
+            Longtitude: - 0,999102399999
+          </Text>
+          <Text style={[styles.absenInfoText, { fontWeight: "700" }]}>
+            TUNGGU SAMPAI TOMBOL ABSEN MUNCUL
+          </Text>
+          <Text style={[styles.absenInfoText, { fontSize: 10 }]}>
+            jika lebih dari 10 detik belum muncul, klik tombol reload
+          </Text>
+          <View style={styles.absenButtonContainer}>
+            <Pressable onPress={handleAbsen} style={styles.absenButton}>
+              <Text>HADIR</Text>
+            </Pressable>
+            <Pressable style={styles.absenButton}>
+              <Text>RELOAD</Text>
+            </Pressable>
+          </View>
         </View>
       </View>
-    </View>
+      <ModalCustom
+        isModalOpen={isAbsenModalOpen}
+        closeAction={() => setIsAbsenModalOpen(!isAbsenModalOpen)}
+      >
+        <MenuButton
+          text={"ABSENSI BERHASIL"}
+          onPress={() => setIsAbsenModalOpen(!isAbsenModalOpen)}
+        />
+      </ModalCustom>
+    </>
   );
 }
 

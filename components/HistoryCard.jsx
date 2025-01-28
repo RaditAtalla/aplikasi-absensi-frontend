@@ -1,33 +1,60 @@
 import { StyleSheet, View, Text, Pressable } from "react-native";
+import { useState } from "react";
+import ModalCustom from "./ModalCustom";
+import MenuButton from "./MenuButton";
+import HistoryDetail from "./HistoryDetail";
 
 export default function HistoryCard() {
+  const [isHistoryDetailOpen, setIsHistoryDetailOpen] = useState(false);
+  const [isPeriodOpen, setIsPeriodOpen] = useState(false);
+
   return (
-    <View style={styles.historyBox}>
-      <View style={styles.historyHeader}>
-        <Text style={styles.historyTitle}>PRESENSI {"\n"}KEHADIRAN</Text>
-        <Pressable>
-          <Text style={styles.historyPeriod}>2023/2024-2</Text>
-        </Pressable>
-      </View>
-      <View style={[styles.historyListBox, { marginBottom: 10 }]}>
-        <View>
-          <Text style={styles.historyListDate}>Selasa</Text>
-          <Text style={styles.historyListDate}>25 Mei 2024</Text>
+    <>
+      <View style={styles.historyBox}>
+        <View style={styles.historyHeader}>
+          <Text style={styles.historyTitle}>PRESENSI {"\n"}KEHADIRAN</Text>
+          <Pressable onPress={() => setIsPeriodOpen(true)}>
+            <Text style={styles.historyPeriod}>2023/2024-2</Text>
+          </Pressable>
         </View>
-        <Pressable>
-          <Text style={styles.historySeeButton}>Lihat</Text>
-        </Pressable>
-      </View>
-      <View style={styles.historyListBox}>
-        <View>
-          <Text style={styles.historyListDate}>Senin</Text>
-          <Text style={styles.historyListDate}>24 Mei 2024</Text>
+        <View style={[styles.historyListBox, { marginBottom: 10 }]}>
+          <View>
+            <Text style={styles.historyListDate}>Selasa</Text>
+            <Text style={styles.historyListDate}>25 Mei 2024</Text>
+          </View>
+          <Pressable onPress={() => setIsHistoryDetailOpen(true)}>
+            <Text style={styles.historySeeButton}>Lihat</Text>
+          </Pressable>
         </View>
-        <Pressable>
-          <Text style={styles.historySeeButton}>Lihat</Text>
-        </Pressable>
+        <View style={styles.historyListBox}>
+          <View>
+            <Text style={styles.historyListDate}>Senin</Text>
+            <Text style={styles.historyListDate}>24 Mei 2024</Text>
+          </View>
+          <Pressable onPress={() => setIsHistoryDetailOpen(true)}>
+            <Text style={styles.historySeeButton}>Lihat</Text>
+          </Pressable>
+        </View>
       </View>
-    </View>
+      <ModalCustom
+        isModalOpen={isPeriodOpen}
+        closeAction={() => setIsPeriodOpen(!isPeriodOpen)}
+      >
+        <MenuButton
+          text={"SEMESTER GANJIL TA 2023/2024"}
+          onPress={() => setIsPeriodOpen(!isPeriodOpen)}
+          style={{ marginBottom: 10 }}
+        />
+        <MenuButton
+          text={"SEMESTER GENAP TA 2023/2024"}
+          onPress={() => setIsPeriodOpen(!isPeriodOpen)}
+        />
+      </ModalCustom>
+      <HistoryDetail
+        isModalOpen={isHistoryDetailOpen}
+        closeAction={() => setIsHistoryDetailOpen(!isHistoryDetailOpen)}
+      />
+    </>
   );
 }
 
