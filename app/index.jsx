@@ -24,6 +24,7 @@ export default function Login() {
           icon={<Key fill={"#6D6D6D"} color={"#6D6D6D"} />}
           placeholder={"Password"}
           style={{ marginBottom: 40 }}
+          secureTextEntry
         />
         <Link href={"/main"} asChild>
           <Pressable style={styles.button}>
