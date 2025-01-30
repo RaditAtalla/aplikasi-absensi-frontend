@@ -1,4 +1,6 @@
 import { StyleSheet, View, Text, Image } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import AuthContext from "../lib/context/AuthContext";
 
 export default function ProfileCard({
   profilePicture,
@@ -7,6 +9,17 @@ export default function ProfileCard({
   name,
   nisn,
 }) {
+  const [token, setToken] = useState();
+  const authContext = useContext(AuthContext);
+
+  useEffect(() => {
+    async function getToken() {
+      setToken(await authContext);
+    }
+
+    getToken();
+  }, []);
+
   return (
     <View style={styles.profileBox}>
       <View style={styles.profileHeader}>

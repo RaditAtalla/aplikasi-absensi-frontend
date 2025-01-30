@@ -1,4 +1,3 @@
-import React from "react";
 import { StatusBar, StyleSheet, Text, ScrollView } from "react-native";
 import ProfileCard from "../../components/ProfileCard";
 import AbsenCard from "../../components/AbsenCard";
