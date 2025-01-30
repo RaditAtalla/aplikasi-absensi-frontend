@@ -1,26 +1,8 @@
 import { StyleSheet, View, Text, Image } from "react-native";
-import { useAuth } from "../lib/context/AuthContext";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import useUser from "../lib/hooks/useUser";
 
 export default function ProfileCard() {
-  const [user, setUser] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
-  const { token } = useAuth();
-
-  useEffect(() => {
-    async function getUser() {
-      const response = await axios.get("http://10.110.0.54:3000/user", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const user = response.data;
-      setUser(user);
-      setIsLoading(false);
-    }
-
-    getUser();
-  }, [token]);
+  const [user, isLoading] = useUser();
 
   return (
     <View style={styles.profileBox}>
