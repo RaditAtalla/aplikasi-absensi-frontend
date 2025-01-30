@@ -44,7 +44,7 @@ export default function ProfileCard() {
       </View>
       <View style={styles.profileInfo}>
         <Image
-          source={require(`../assets/images/radit.png`)}
+          source={require("../assets/images/blank-profile.png")}
           style={styles.profilePic}
         />
         <View style={{ justifyContent: "center", gap: 8 }}>
