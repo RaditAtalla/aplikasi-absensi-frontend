@@ -1,31 +1,32 @@
 import { StyleSheet, View, Text, Image } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import AuthContext from "../lib/context/AuthContext";
+import { useAuth } from "../lib/context/AuthContext";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-export default function ProfileCard({
-  profilePicture,
-  teacherType,
-  status,
-  name,
-  nisn,
-}) {
-  const [token, setToken] = useState();
-  const authContext = useContext(AuthContext);
+export default function ProfileCard() {
+  const [user, setUser] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const { token } = useAuth();
 
   useEffect(() => {
-    async function getToken() {
-      setToken(await authContext);
+    async function getUser() {
+      const response = await axios.get("http://10.110.0.54:3000/user", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const user = response.data;
+      setUser(user);
+      setIsLoading(false);
     }
 
-    getToken();
-  }, []);
+    getUser();
+  }, [token]);
 
   return (
     <View style={styles.profileBox}>
       <View style={styles.profileHeader}>
         <Text style={styles.profileType}>
-          GURU {"\n"}
-          {teacherType}
+          {isLoading ? "Loading..." : `Guru \n${user.tipeGuru}`}
         </Text>
         <View>
           <Text
@@ -36,11 +37,16 @@ export default function ProfileCard({
           >
             STATUS
           </Text>
-          <Text style={styles.profileStatus}>{status}</Text>
+          <Text style={styles.profileStatus}>
+            {isLoading ? "Loading..." : user.status}
+          </Text>
         </View>
       </View>
       <View style={styles.profileInfo}>
-        <Image source={profilePicture} style={styles.profilePic} />
+        <Image
+          source={require(`../assets/images/radit.png`)}
+          style={styles.profilePic}
+        />
         <View style={{ justifyContent: "center", gap: 8 }}>
           <View>
             <View style={{ flexDirection: "row" }}>
@@ -55,7 +61,7 @@ export default function ProfileCard({
                   flexWrap: "wrap",
                 }}
               >
-                {name}
+                {isLoading ? "Loading..." : user.nama}
               </Text>
             </View>
             <Text
@@ -66,7 +72,7 @@ export default function ProfileCard({
                 fontSize: 15,
               }}
             >
-              NISN: {nisn}
+              NISN: {isLoading ? "Loading..." : user.nisn}
             </Text>
           </View>
           <Text style={{ color: "white", fontFamily: "Inter", fontSize: 10 }}>

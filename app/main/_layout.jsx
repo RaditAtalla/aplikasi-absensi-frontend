@@ -5,6 +5,7 @@ import { Home, LogOut, Menu } from "react-native-feather";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { router } from "expo-router";
+import { useAuth } from "../../lib/context/AuthContext";
 
 export default function DrawerLayout() {
   return (
@@ -18,11 +19,13 @@ export default function DrawerLayout() {
 }
 
 function CustomDrawer(props) {
+  const { logout } = useAuth();
+
   return (
     <DrawerContentScrollView style={drawerStyles.drawer} {...props}>
       <View style={drawerStyles.profileContainer}>
         <Image
-          source={require("../../assets/images/profile.png")}
+          source={require("../../assets/images/radit.png")}
           style={drawerStyles.profilePic}
         />
         <View style={{ justifyContent: "space-between" }}>
@@ -76,7 +79,7 @@ function CustomDrawer(props) {
         labelStyle={drawerStyles.label}
       />
       <DrawerItem
-        onPress={() => router.dismissAll()}
+        onPress={logout}
         icon={() => <LogOut color={"white"} />}
         label={"LOGOUT"}
         labelStyle={drawerStyles.label}

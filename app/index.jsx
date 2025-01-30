@@ -3,22 +3,22 @@ import Input from "../components/Input";
 import { Key, User } from "react-native-feather";
 import { router } from "expo-router";
 import { useState } from "react";
-import * as SecureStore from "expo-secure-store";
 import axios from "axios";
+import { useAuth } from "../lib/context/AuthContext";
 
 export default function Login() {
   const [loginData, setLoginData] = useState({ username: "", password: "" });
+  const { login } = useAuth();
 
   async function handleLogin() {
     try {
-      const login = await axios.post("http://10.110.0.54:3000/login", {
+      const response = await axios.post("http://10.110.0.54:3000/login", {
         name: loginData.username,
         password: loginData.password,
       });
 
-      const token = login.data;
-      await SecureStore.setItemAsync("jwt", token);
-
+      const token = response.data;
+      login(token);
       router.push("/main");
     } catch (error) {
       console.log(error.message);
