@@ -6,6 +6,7 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { router } from "expo-router";
 import { useAuth } from "../../lib/context/AuthContext";
+import useUser from "../../lib/hooks/useUser";
 
 export default function DrawerLayout() {
   return (
@@ -19,6 +20,7 @@ export default function DrawerLayout() {
 }
 
 function CustomDrawer(props) {
+  const [user, isLoading] = useUser();
   const { logout } = useAuth();
 
   return (
@@ -42,7 +44,7 @@ function CustomDrawer(props) {
                   flexWrap: "wrap",
                 }}
               >
-                Rizky Prayuda F. S.Kom
+                {isLoading ? "Loading..." : user.nama}
               </Text>
             </View>
             <Text
@@ -53,7 +55,7 @@ function CustomDrawer(props) {
                 color: "white",
               }}
             >
-              NISN: 545211210
+              NISN: {isLoading ? "Loading..." : user.nisn}
             </Text>
           </View>
           <Text
