@@ -12,7 +12,7 @@ export default function Home() {
         <Text style={styles.date}>{getTodayFullDate()}</Text>
         <ProfileCard />
         <AbsenCard />
-        <HistoryCard period={"2023/2024-1"} />
+        <HistoryCard />
       </ScrollView>
     </>
   );

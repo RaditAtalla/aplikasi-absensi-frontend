@@ -35,7 +35,7 @@ export default function AbsenCard() {
 
       setIsAbsenModalOpen(true);
     } catch (error) {
-      Alert.alert("Absen gagal");
+      Alert.alert(error.message);
     }
   }
 
