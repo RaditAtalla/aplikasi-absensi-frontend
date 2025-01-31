@@ -8,9 +8,14 @@ import { useAuth } from "../lib/context/AuthContext";
 
 export default function Login() {
   const [loginData, setLoginData] = useState({ username: "", password: "" });
+  const [error, setError] = useState();
   const { login } = useAuth();
 
   async function handleLogin() {
+    if (!loginData.username || !loginData.password) {
+      return setError("Harap isi seluruh kolom");
+    }
+
     try {
       const response = await axios.post("http://10.110.0.54:3000/login", {
         name: loginData.username,
@@ -22,6 +27,7 @@ export default function Login() {
       router.push("/main");
     } catch (error) {
       console.log(error.message);
+      setError(error.message);
     }
   }
 
@@ -36,6 +42,7 @@ export default function Login() {
           source={require("../assets/images/telkom-schools.png")}
           style={styles.logo}
         />
+        {error && <Text style={{ color: "red" }}>{error}</Text>}
         <Input
           icon={<User fill={"#6D6D6D"} color={"#6D6D6D"} />}
           placeholder={"Username"}

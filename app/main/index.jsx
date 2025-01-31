@@ -10,17 +10,8 @@ export default function Home() {
       <StatusBar backgroundColor={"#B22A2A"} barStyle={"light-content"} />
       <ScrollView style={styles.container}>
         <Text style={styles.date}>{getTodayFullDate()}</Text>
-        <ProfileCard
-        // name={"Raditya A. Rachmadie"}
-        // nisn={"545211210"}
-        // profilePicture={require("../../assets/images/radit.png")}
-        // teacherType={"PRODUKTIF"}
-        // status={"AKTIF MENGAJAR"}
-        />
-        <AbsenCard
-          latitude={"- 0,999102399999"}
-          longitude={"- 0,999102399999"}
-        />
+        <ProfileCard />
+        <AbsenCard />
         <HistoryCard period={"2023/2024-1"} />
       </ScrollView>
     </>

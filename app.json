@@ -9,13 +9,15 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.atalla.frontend"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/telkom-schools.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.atalla.frontend"
     },
     "web": {
       "bundler": "metro",
@@ -23,6 +25,12 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ],
       "expo-router",
       [
         "expo-splash-screen",

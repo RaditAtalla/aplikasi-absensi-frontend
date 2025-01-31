@@ -1,14 +1,72 @@
-import { useState } from "react";
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { useEffect, useState } from "react";
+import { StyleSheet, View, Text, Pressable, Alert } from "react-native";
 import ModalCustom from "./ModalCustom";
 import MenuButton from "./MenuButton";
+import * as Location from "expo-location";
+import axios from "axios";
+import { useAuth } from "../lib/context/AuthContext";
 
-export default function AbsenCard({ latitude, longitude }) {
+export default function AbsenCard() {
   const [isAbsenModalOpen, setIsAbsenModalOpen] = useState(false);
+  const [location, setLocation] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const { token } = useAuth();
 
-  function handleAbsen() {
-    setIsAbsenModalOpen(true);
+  async function handleAbsen() {
+    const centerLatitude = 3.523248;
+    const centerLongitude = 98.621031;
+
+    if (
+      location.latitude != centerLatitude &&
+      location.longitude != centerLongitude
+    ) {
+      return Alert.alert("Anda berada di luar lokasi absensi");
+    }
+
+    try {
+      await axios.post(
+        "http://10.110.0.54:3000/",
+        {
+          latitude: location.latitude,
+          longitude: location.longitude,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setIsAbsenModalOpen(true);
+    } catch (error) {
+      Alert.alert("Absen gagal");
+    }
   }
+
+  async function handleReload() {
+    setIsLoading(true);
+
+    const location = await Location.getCurrentPositionAsync();
+    const longitude = location.coords.longitude;
+    const latitude = location.coords.latitude;
+
+    setLocation({ longitude: `${longitude}`, latitude: `${latitude}` });
+    setIsLoading(false);
+  }
+
+  useEffect(() => {
+    async function getLocation() {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status != "granted") {
+        return Alert.alert("Harap beri izin lokasi!");
+      }
+
+      const location = await Location.getCurrentPositionAsync();
+      const longitude = location.coords.longitude;
+      const latitude = location.coords.latitude;
+
+      setLocation({ longitude: `${longitude}`, latitude: `${latitude}` });
+      setIsLoading(false);
+    }
+
+    getLocation();
+  }, []);
 
   return (
     <>
@@ -18,9 +76,11 @@ export default function AbsenCard({ latitude, longitude }) {
         </View>
         <View style={styles.absenInfo}>
           <Text style={styles.absenInfoText}>Your location:</Text>
-          <Text style={styles.absenInfoText}>Latitude: {latitude}</Text>
+          <Text style={styles.absenInfoText}>
+            Latitude: {isLoading ? "Loading..." : location.latitude}
+          </Text>
           <Text style={[styles.absenInfoText, { marginBottom: 5 }]}>
-            Longtitude: {longitude}
+            Longtitude: {isLoading ? "Loading..." : location.longitude}
           </Text>
           <Text style={[styles.absenInfoText, { fontWeight: "700" }]}>
             TUNGGU SAMPAI TOMBOL ABSEN MUNCUL
@@ -32,7 +92,7 @@ export default function AbsenCard({ latitude, longitude }) {
             <Pressable onPress={handleAbsen} style={styles.absenButton}>
               <Text>HADIR</Text>
             </Pressable>
-            <Pressable style={styles.absenButton}>
+            <Pressable onPress={handleReload} style={styles.absenButton}>
               <Text>RELOAD</Text>
             </Pressable>
           </View>

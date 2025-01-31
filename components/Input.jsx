@@ -52,5 +52,6 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "Inter",
     width: 150,
+    paddingVertical: 8,
   },
 });
