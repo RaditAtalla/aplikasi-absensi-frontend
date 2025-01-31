@@ -1,12 +1,13 @@
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Drawer } from "expo-router/drawer";
 import "react-native-reanimated";
-import { Home, LogOut, Menu } from "react-native-feather";
+import { File, Home, LogOut, Menu } from "react-native-feather";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { router } from "expo-router";
 import { useAuth } from "../../lib/context/AuthContext";
 import useUser from "../../lib/hooks/useUser";
+import downloadData from "../../lib/utils/downloadData";
 
 export default function DrawerLayout() {
   return (
@@ -80,6 +81,14 @@ function CustomDrawer(props) {
         label={"HOME"}
         labelStyle={drawerStyles.label}
       />
+      {user.email == "admin@mail.com" && (
+        <DrawerItem
+          onPress={downloadData}
+          icon={() => <File color={"white"} />}
+          label={"DOWNLOAD DATA"}
+          labelStyle={drawerStyles.label}
+        />
+      )}
       <DrawerItem
         onPress={logout}
         icon={() => <LogOut color={"white"} />}
