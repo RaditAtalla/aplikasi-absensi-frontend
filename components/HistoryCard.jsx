@@ -1,8 +1,12 @@
 import { StyleSheet, View, Text, Pressable } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ModalCustom from "./ModalCustom";
 import MenuButton from "./MenuButton";
 import HistoryDetail from "./HistoryDetail";
+import axios from "axios";
+import { useAuth } from "../lib/context/AuthContext";
+import getDateFromISO from "../lib/utils/getDateFromISO";
+import getDayFromISO from "../lib/utils/getDayFromISO";
 
 const history = [
   {
@@ -44,32 +48,60 @@ const history = [
 ];
 
 export default function HistoryCard() {
+  const [history, setHistory] = useState([]);
   const [isHistoryDetailOpen, setIsHistoryDetailOpen] = useState(false);
   const [isPeriodOpen, setIsPeriodOpen] = useState(false);
-  const [period, setPeriod] = useState("2023/2024-1");
+  const [period, setPeriod] = useState("2024/2025-1");
   const [historyDetail, setHistoryDetail] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const { token } = useAuth();
+
+  const SEMESTER_GANJIL = "SEMESTER GANJIL TA 2024/2025";
+  const SEMESTER_GENAP = "SEMESTER GENAP TA 2024/2025";
+  const SEMESTER_GANJIL_SLUG = "2024/2025-1";
+  const SEMESTER_GENAP_SLUG = "2024/2025-2";
 
   function handlePeriodChange(period) {
     setPeriod(period);
     setIsPeriodOpen(!isPeriodOpen);
   }
 
-  function handleViewHistoryDetail(date) {
-    setIsHistoryDetailOpen(true);
+  function handleViewHistoryDetail(id) {
     history.forEach((h) => {
-      if (h.date == date) {
+      if (h.id == id) {
+        const date = new Date(h.waktu);
+        const wibDate = date.toLocaleTimeString("en", {
+          timeStyle: "short",
+          hour12: false,
+          timeZone: "Asia/Jakarta",
+        });
+
         setHistoryDetail({
-          day: h.day,
-          date: h.date,
-          period: h.period,
-          periodSlug: h.periodSlug,
-          arriveTime: h.arriveTime,
+          day: getDayFromISO(date),
+          date: getDateFromISO(date),
+          arriveTime: wibDate,
           leaveTime: h.leaveTime,
           status: h.status,
         });
       }
     });
+
+    setIsHistoryDetailOpen(true);
   }
+
+  useEffect(() => {
+    async function getHistoryData() {
+      const response = await axios.get("http://localhost:3000/history", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const history = response.data;
+      setHistory(history);
+      setIsLoading(false);
+    }
+
+    getHistoryData();
+  }, [token]);
 
   return (
     <>
@@ -80,37 +112,45 @@ export default function HistoryCard() {
             <Text style={styles.historyPeriod}>{period}</Text>
           </Pressable>
         </View>
-        {history.map((h) => {
-          if (h.periodSlug == period) {
-            return (
-              <View
-                key={h.date}
-                style={[styles.historyListBox, { marginBottom: 10 }]}
-              >
-                <View>
-                  <Text style={styles.historyListDate}>{h.day}</Text>
-                  <Text style={styles.historyListDate}>{h.date}</Text>
+        {isLoading ? (
+          <Text>Loading...</Text>
+        ) : (
+          history.map((h) => {
+            if (h.periode_slug == period) {
+              return (
+                <View
+                  key={h.id}
+                  style={[styles.historyListBox, { marginBottom: 10 }]}
+                >
+                  <View>
+                    <Text style={styles.historyListDate}>
+                      {getDayFromISO(new Date(h.waktu))}
+                    </Text>
+                    <Text style={styles.historyListDate}>
+                      {getDateFromISO(new Date(h.waktu))}
+                    </Text>
+                  </View>
+                  <Pressable onPress={() => handleViewHistoryDetail(h.id)}>
+                    <Text style={styles.historySeeButton}>Lihat</Text>
+                  </Pressable>
                 </View>
-                <Pressable onPress={() => handleViewHistoryDetail(h.date)}>
-                  <Text style={styles.historySeeButton}>Lihat</Text>
-                </Pressable>
-              </View>
-            );
-          }
-        })}
+              );
+            }
+          })
+        )}
       </View>
       <ModalCustom
         isModalOpen={isPeriodOpen}
         closeAction={() => setIsPeriodOpen(!isPeriodOpen)}
       >
         <MenuButton
-          text={"SEMESTER GANJIL TA 2023/2024"}
-          onPress={() => handlePeriodChange("2023/2024-1")}
+          text={SEMESTER_GANJIL}
+          onPress={() => handlePeriodChange("2024/2025-1")}
           style={{ marginBottom: 10 }}
         />
         <MenuButton
-          text={"SEMESTER GENAP TA 2023/2024"}
-          onPress={() => handlePeriodChange("2023/2024-2")}
+          text={SEMESTER_GENAP}
+          onPress={() => handlePeriodChange("2024/2025-2")}
         />
       </ModalCustom>
       <HistoryDetail

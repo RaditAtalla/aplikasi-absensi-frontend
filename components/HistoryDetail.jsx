@@ -1,6 +1,6 @@
 import { Modal, View, Text, Pressable, StyleSheet } from "react-native";
 
-export default function HistoryDetai({ isModalOpen, closeAction, data }) {
+export default function HistoryDetail({ isModalOpen, closeAction, data }) {
   return (
     <Modal visible={isModalOpen} animationType="slide" transparent>
       <Pressable onPress={closeAction} style={styles.bottomSheet}>
