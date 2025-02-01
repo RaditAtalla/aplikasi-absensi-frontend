@@ -145,12 +145,12 @@ export default function HistoryCard() {
       >
         <MenuButton
           text={SEMESTER_GANJIL}
-          onPress={() => handlePeriodChange("2024/2025-1")}
+          onPress={() => handlePeriodChange(SEMESTER_GANJIL_SLUG)}
           style={{ marginBottom: 10 }}
         />
         <MenuButton
           text={SEMESTER_GENAP}
-          onPress={() => handlePeriodChange("2024/2025-2")}
+          onPress={() => handlePeriodChange(SEMESTER_GENAP_SLUG)}
         />
       </ModalCustom>
       <HistoryDetail
