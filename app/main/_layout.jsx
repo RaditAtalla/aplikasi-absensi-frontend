@@ -30,8 +30,8 @@ function CustomDrawer(props) {
         <Image
           source={{
             uri: user.foto
-              ? `http://localhost:3000/public/${user.foto}`
-              : `http://localhost:3000/public/blank-profile.png`,
+              ? `http://10.0.2.2:3000/public/${user.foto}`
+              : `http://10.0.2.2:3000/public/blank-profile.png`,
           }}
           style={drawerStyles.profilePic}
         />

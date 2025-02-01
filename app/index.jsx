@@ -7,19 +7,19 @@ import axios from "axios";
 import { useAuth } from "../lib/context/AuthContext";
 
 export default function Login() {
-  const [loginData, setLoginData] = useState({ username: "", password: "" });
+  const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [error, setError] = useState();
   const { login } = useAuth();
 
   async function handleLogin() {
     setError("");
-    if (!loginData.username || !loginData.password) {
+    if (!loginData.email || !loginData.password) {
       return setError("Harap isi seluruh kolom");
     }
 
     try {
-      const response = await axios.post("http://localhost:3000/login", {
-        name: loginData.username,
+      const response = await axios.post("http://10.0.2.2:3000/login", {
+        email: loginData.email,
         password: loginData.password,
       });
 
@@ -27,6 +27,7 @@ export default function Login() {
       login(token);
       router.push("/main");
     } catch (error) {
+      console.log(error.message);
       if (error.response.status == 404) return setError("Nama tidak ditemukan");
       if (error.response.status == 401) return setError("Password salah");
     }
@@ -46,9 +47,9 @@ export default function Login() {
         {error && <Text style={{ color: "red" }}>{error}</Text>}
         <Input
           icon={<User fill={"#6D6D6D"} color={"#6D6D6D"} />}
-          placeholder={"Username"}
+          placeholder={"Email"}
           style={{ marginBottom: 20 }}
-          onChangeText={(username) => setLoginData({ ...loginData, username })}
+          onChangeText={(email) => setLoginData({ ...loginData, email })}
         />
         <Input
           icon={<Key fill={"#6D6D6D"} color={"#6D6D6D"} />}

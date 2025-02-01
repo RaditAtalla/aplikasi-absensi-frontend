@@ -7,45 +7,7 @@ import axios from "axios";
 import { useAuth } from "../lib/context/AuthContext";
 import getDateFromISO from "../lib/utils/getDateFromISO";
 import getDayFromISO from "../lib/utils/getDayFromISO";
-
-const history = [
-  {
-    day: "SELASA",
-    date: "11 NOVEMBER 2023",
-    period: "SEMESTER GANJIL TA 2023/2024",
-    periodSlug: "2023/2024-1",
-    arriveTime: "07:02 WIB",
-    leaveTime: "15:13 WIB",
-    status: "TIDAK TERLAMBAT",
-  },
-  {
-    day: "SENIN",
-    date: "10 NOVEMBER 2023",
-    period: "SEMESTER GANJIL TA 2023/2024",
-    periodSlug: "2023/2024-1",
-    arriveTime: "07:00 WIB",
-    leaveTime: "12:10 WIB",
-    status: "TIDAK TERLAMBAT",
-  },
-  {
-    day: "SELASA",
-    date: "25 MEI 2024",
-    period: "SEMESTER GENAP TA 2023/2024",
-    periodSlug: "2023/2024-2",
-    arriveTime: "08:00 WIB",
-    leaveTime: "12:10 WIB",
-    status: "TERLAMBAT",
-  },
-  {
-    day: "SENIN",
-    date: "24 MEI 2024",
-    period: "SEMESTER GENAP TA 2023/2024",
-    periodSlug: "2023/2024-2",
-    arriveTime: "07:00 WIB",
-    leaveTime: "15:30 WIB",
-    status: "TIDAK TERLAMBAT",
-  },
-];
+import getPeriod from "../lib/utils/getPeriod";
 
 export default function HistoryCard() {
   const [history, setHistory] = useState([]);
@@ -53,54 +15,53 @@ export default function HistoryCard() {
   const [isPeriodOpen, setIsPeriodOpen] = useState(false);
   const [period, setPeriod] = useState("2024/2025-1");
   const [historyDetail, setHistoryDetail] = useState({});
+  const [hari, setHari] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const {
+    SEMESTER_GANJIL,
+    SEMESTER_GENAP,
+    SEMESTER_GANJIL_SLUG,
+    SEMESTER_GENAP_SLUG,
+  } = getPeriod();
   const { token } = useAuth();
-
-  const SEMESTER_GANJIL = "SEMESTER GANJIL TA 2024/2025";
-  const SEMESTER_GENAP = "SEMESTER GENAP TA 2024/2025";
-  const SEMESTER_GANJIL_SLUG = "2024/2025-1";
-  const SEMESTER_GENAP_SLUG = "2024/2025-2";
 
   function handlePeriodChange(period) {
     setPeriod(period);
     setIsPeriodOpen(!isPeriodOpen);
   }
 
-  function handleViewHistoryDetail(id) {
-    history.forEach((h) => {
-      if (h.id == id) {
-        const date = new Date(h.waktu);
-        const wibDate = date.toLocaleTimeString("en", {
-          timeStyle: "short",
-          hour12: false,
-          timeZone: "Asia/Jakarta",
-        });
+  async function handleViewHistoryDetail(date) {
+    const response = await axios.post(
+      "http://10.0.2.2:3000/history-detail",
+      { date },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
 
-        setHistoryDetail({
-          day: getDayFromISO(date),
-          date: getDateFromISO(date),
-          arriveTime: wibDate,
-          leaveTime: h.leaveTime,
-          status: h.status,
-        });
-      }
+    const detail = response.data;
+
+    setHistoryDetail({
+      day: getDayFromISO(new Date(detail.iso_waktu)),
+      date: detail.tanggal,
+      arriveTime: detail.jam_datang,
+      leaveTime: detail.jam_pulang,
+      status: detail.status,
     });
 
     setIsHistoryDetailOpen(true);
   }
 
   useEffect(() => {
-    async function getHistoryData() {
-      const response = await axios.get("http://localhost:3000/history", {
+    async function getHari() {
+      const response = await axios.get("http://10.0.2.2:3000/day", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      const history = response.data;
-      setHistory(history);
+      const hari = response.data;
+      setHari(hari);
       setIsLoading(false);
     }
 
-    getHistoryData();
+    getHari();
   }, [token]);
 
   return (
@@ -115,27 +76,23 @@ export default function HistoryCard() {
         {isLoading ? (
           <Text>Loading...</Text>
         ) : (
-          history.map((h) => {
-            if (h.periode_slug == period) {
-              return (
-                <View
-                  key={h.id}
-                  style={[styles.historyListBox, { marginBottom: 10 }]}
-                >
-                  <View>
-                    <Text style={styles.historyListDate}>
-                      {getDayFromISO(new Date(h.waktu))}
-                    </Text>
-                    <Text style={styles.historyListDate}>
-                      {getDateFromISO(new Date(h.waktu))}
-                    </Text>
-                  </View>
-                  <Pressable onPress={() => handleViewHistoryDetail(h.id)}>
-                    <Text style={styles.historySeeButton}>Lihat</Text>
-                  </Pressable>
+          hari.map((h) => {
+            return (
+              <View
+                key={h.id}
+                style={[styles.historyListBox, { marginBottom: 10 }]}
+              >
+                <View>
+                  <Text style={styles.historyListDate}>{h.hari}</Text>
+                  <Text style={styles.historyListDate}>{h.tanggal}</Text>
                 </View>
-              );
-            }
+                <Pressable
+                  onPress={async () => await handleViewHistoryDetail(h.tanggal)}
+                >
+                  <Text style={styles.historySeeButton}>Lihat</Text>
+                </Pressable>
+              </View>
+            );
           })
         )}
       </View>

@@ -5,16 +5,20 @@ import MenuButton from "./MenuButton";
 import * as Location from "expo-location";
 import axios from "axios";
 import { useAuth } from "../lib/context/AuthContext";
+import getPeriod from "../lib/utils/getPeriod";
+import { router } from "expo-router";
 
 export default function AbsenCard() {
   const [isAbsenModalOpen, setIsAbsenModalOpen] = useState(false);
   const [location, setLocation] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [hasAbsen, setHasAbsen] = useState(false);
+  const { CURRENT_PERIOD, CURRENT_PERIOD_SLUG } = getPeriod();
   const { token } = useAuth();
 
   async function handleAbsen() {
-    const centerLatitude = 3.523248;
-    const centerLongitude = 98.621031;
+    const centerLatitude = 3.5229;
+    const centerLongitude = 98.6207;
 
     if (
       location.latitude != centerLatitude &&
@@ -23,17 +27,27 @@ export default function AbsenCard() {
       return Alert.alert("Anda berada di luar lokasi absensi");
     }
 
+    let type = "HADIR";
+    if (hasAbsen) type = "PULANG";
+
     try {
       await axios.post(
-        "http://10.110.0.54:3000/",
+        "http://10.0.2.2:3000/",
         {
           latitude: location.latitude,
           longitude: location.longitude,
+          period: CURRENT_PERIOD,
+          periodSlug: CURRENT_PERIOD_SLUG,
+          type,
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       setIsAbsenModalOpen(true);
+
+      if (type == "HADIR") {
+        setHasAbsen(true);
+      }
     } catch (error) {
       Alert.alert(error.message);
     }
@@ -68,6 +82,18 @@ export default function AbsenCard() {
     getLocation();
   }, []);
 
+  useEffect(() => {
+    async function getHasAbsen() {
+      const response = await axios.get("http://10.0.2.2:3000/has-absen", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const hasAbsen = response.data;
+      setHasAbsen(hasAbsen);
+    }
+
+    getHasAbsen();
+  }, [token]);
+
   return (
     <>
       <View style={styles.absenBox}>
@@ -90,7 +116,7 @@ export default function AbsenCard() {
           </Text>
           <View style={styles.absenButtonContainer}>
             <Pressable onPress={handleAbsen} style={styles.absenButton}>
-              <Text>HADIR</Text>
+              <Text>{hasAbsen ? "PULANG" : "HADIR"}</Text>
             </Pressable>
             <Pressable onPress={handleReload} style={styles.absenButton}>
               <Text>RELOAD</Text>
@@ -104,7 +130,7 @@ export default function AbsenCard() {
       >
         <MenuButton
           text={"ABSENSI BERHASIL"}
-          onPress={() => setIsAbsenModalOpen(!isAbsenModalOpen)}
+          onPress={() => setIsAbsenModalOpen(false)}
         />
       </ModalCustom>
     </>
