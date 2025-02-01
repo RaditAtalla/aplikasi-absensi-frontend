@@ -28,7 +28,11 @@ function CustomDrawer(props) {
     <DrawerContentScrollView style={drawerStyles.drawer} {...props}>
       <View style={drawerStyles.profileContainer}>
         <Image
-          source={require("../../assets/images/blank-profile.png")}
+          source={{
+            uri: user.foto
+              ? `http://localhost:3000/public/${user.foto}`
+              : `http://localhost:3000/public/blank-profile.png`,
+          }}
           style={drawerStyles.profilePic}
         />
         <View style={{ justifyContent: "space-between" }}>

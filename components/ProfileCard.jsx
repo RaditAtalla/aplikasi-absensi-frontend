@@ -26,7 +26,11 @@ export default function ProfileCard() {
       </View>
       <View style={styles.profileInfo}>
         <Image
-          source={require("../assets/images/blank-profile.png")}
+          source={{
+            uri: user.foto
+              ? `http://localhost:3000/public/${user.foto}`
+              : `http://localhost:3000/public/blank-profile.png`,
+          }}
           style={styles.profilePic}
         />
         <View style={{ justifyContent: "center", gap: 8 }}>
