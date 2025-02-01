@@ -12,12 +12,13 @@ export default function Login() {
   const { login } = useAuth();
 
   async function handleLogin() {
+    setError("");
     if (!loginData.username || !loginData.password) {
       return setError("Harap isi seluruh kolom");
     }
 
     try {
-      const response = await axios.post("http://10.110.0.54:3000/login", {
+      const response = await axios.post("http://localhost:3000/login", {
         name: loginData.username,
         password: loginData.password,
       });
@@ -26,8 +27,8 @@ export default function Login() {
       login(token);
       router.push("/main");
     } catch (error) {
-      console.log(error.message);
-      setError(error.message);
+      if (error.response.status == 404) return setError("Nama tidak ditemukan");
+      if (error.response.status == 401) return setError("Password salah");
     }
   }
 
